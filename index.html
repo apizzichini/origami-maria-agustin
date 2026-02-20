@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Origami Master - Juego de Programación</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎴 Origami Master</h1>
+            <p>Aprende a programar creando figuras de origami</p>
+        </header>
+
+        <main>
+            <div class="game-info">
+                <div class="score-board">
+                    <div class="stat">
+                        <span class="label">Nivel:</span>
+                        <span id="level" class="value">1</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Puntuación:</span>
+                        <span id="score" class="value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Intentos:</span>
+                        <span id="attempts" class="value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="game-section">
+                <div class="challenge">
+                    <h2>Desafío de Programación</h2>
+                    <p id="challenge-text"></p>
+                    <div id="code-challenge" class="code-block"></div>
+                </div>
+
+                <div class="origami-canvas">
+                    <h2>Tu Origami</h2>
+                    <svg id="origami-svg" viewBox="0 0 400 400" width="400" height="400">
+                        <!-- El origami se dibujará aquí -->
+                    </svg>
+                </div>
+            </section>
+
+            <section class="controls">
+                <div class="button-group">
+                    <button id="fold-btn" class="btn btn-primary">Doblar 📁</button>
+                    <button id="unfold-btn" class="btn btn-secondary">Desdoblar 📂</button>
+                    <button id="rotate-btn" class="btn btn-secondary">Girar 🔄</button>
+                    <button id="flip-btn" class="btn btn-secondary">Voltear 🔃</button>
+                </div>
+                <div class="button-group">
+                    <button id="verify-btn" class="btn btn-success">Verificar Solución ✓</button>
+                    <button id="next-level-btn" class="btn btn-info">Siguiente Nivel →</button>
+                    <button id="reset-btn" class="btn btn-danger">Reiniciar 🔄</button>
+                </div>
+            </section>
+
+            <section class="feedback">
+                <div id="message" class="message"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Origami Master © 2026 - Aprende Programación Jugando</p>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

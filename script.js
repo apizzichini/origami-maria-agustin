@@ -1,68 +1,88 @@
-// Referencias globales
-const canvas = document.getElementById('origamiCanvas');
+const canvas = document.getElementById('lienzo');
 const ctx = canvas.getContext('2d');
-const editor = document.getElementById('codeEditor');
-const consola = document.getElementById('console-output');
+const editor = document.getElementById('editor');
+const consola = document.getElementById('consola');
 
-let nivelActual = 0;
-let estadoPapel = { w: 300, h: 300, color: 'white' };
+let lvl = 0;
+let papel = { color: 'white', dobleces: 0, nombre: 'Papel Cuadrado' };
 
+// CONFIGURACIÓN DE NIVELES
 const niveles = [
-    { inst: "Escribe: <code>pintar('purple')</code>", val: () => estadoPapel.color === 'purple' },
-    { inst: "Escribe: <code>plegar('mitad')</code>", val: () => estadoPapel.w < 300 },
-    { inst: "Usa un bucle: <br><code>for(let i=0; i<3; i++){ plegar('mitad'); }</code>", val: () => estadoPapel.w < 50 }
+    { m: "Escribe: color('azul')", check: () => papel.color === 'azul', nombre: 'Papel Azul' },
+    { m: "Dobla una vez: doblar()", check: () => papel.dobleces === 1, nombre: 'Servilleta' },
+    { m: "Haz 2 dobleces: doblar()", check: () => papel.dobleces === 2, nombre: 'Avión de Papel' },
+    { m: "Pinta de 'naranja' y dobla", check: () => papel.color === 'naranja' && papel.dobleces === 3, nombre: 'Zorro Origami' },
+    { m: "Haz 4 dobleces para un barco", check: () => papel.dobleces === 4, nombre: 'Barco Velero' },
+    { m: "Nivel Maestro: Pinta 'oro' y 5 dobleces", check: () => papel.color === 'oro' && papel.dobleces === 5, nombre: 'Grulla Sagrada' }
 ];
 
-// FUNCIONES QUE LLAMA EL USUARIO
-window.pintar = function(c) {
-    estadoPapel.color = c;
-    return "Pintado de " + c;
+// COMANDOS BÁSICOS (LENGUAJE SIMPLE)
+window.color = (c) => { 
+    if(c === 'rojo') papel.color = '#ff4d4d';
+    else if(c === 'azul') papel.color = '#4d94ff';
+    else if(c === 'naranja') papel.color = '#ff944d';
+    else if(c === 'oro') papel.color = '#ffd700';
+    else papel.color = c;
+    return "Pintado";
 };
 
-window.plegar = function(t) {
-    if(t === 'mitad') {
-        estadoPapel.w /= 2;
-        return "Plegado realizado";
-    }
-};
+window.doblar = () => { papel.dobleces++; return "Doblado"; };
+window.borrar = () => { papel.dobleces = 0; papel.color = 'white'; return "Limpiado"; };
 
-function dibujar() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = estadoPapel.color;
-    const x = (canvas.width - estadoPapel.w) / 2;
-    const y = (canvas.height - estadoPapel.h) / 2;
-    ctx.fillRect(x, y, estadoPapel.w, estadoPapel.h);
-    ctx.strokeRect(x, y, estadoPapel.w, estadoPapel.h);
-}
-
-// ESTA ES LA FUNCIÓN QUE ACTIVA EL BOTÓN
-window.correrCodigo = function() {
-    const texto = editor.value; // Leemos lo que escribiste
-    
+function ejecutar() {
     try {
-        const resultado = eval(texto); // Ejecutamos el código
-        consola.innerText = "Resultado: " + resultado;
+        const codigo = editor.value;
+        eval(codigo);
         dibujar();
         
-        // Revisar si pasas de nivel
-        if(niveles[nivelActual].val()) {
-            consola.innerText += " | ¡Nivel Superado!";
-            nivelActual++;
-            setTimeout(actualizarInterfaz, 1000);
+        if(niveles[lvl].check()) {
+            consola.innerText = "¡Excelente! Nivel superado.";
+            papel.nombre = niveles[lvl].nombre;
+            lvl++;
+            setTimeout(sigNivel, 1500);
+        } else {
+            consola.innerText = "Código ejecutado, pero falta algo...";
         }
-    } catch(err) {
-        consola.innerText = "Error: " + err.message;
+    } catch(e) {
+        consola.innerText = "Error: Escribe bien los comandos.";
     }
-};
+}
 
-function actualizarInterfaz() {
-    if(nivelActual < niveles.length) {
-        document.getElementById('level-num').innerText = "NIVEL " + (nivelActual + 1);
-        document.getElementById('level-instructions').innerHTML = niveles[nivelActual].inst;
+function sigNivel() {
+    if(lvl < niveles.length) {
+        document.getElementById('lvl-tag').innerText = "NIVEL " + (lvl + 1);
+        document.getElementById('mision').innerText = "Misión: " + niveles[lvl].m;
         editor.value = "";
     } else {
-        document.getElementById('level-instructions').innerText = "¡ERES UN CRACK DEL CÓDIGO!";
+        alert("¡FELICIDADES! Eres un maestro del Origami.");
     }
+}
+
+function dibujar() {
+    ctx.clearRect(0, 0, 400, 400);
+    ctx.fillStyle = papel.color;
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 3;
+    document.getElementById('figura-nombre').innerText = papel.nombre;
+
+    ctx.beginPath();
+    if(papel.dobleces === 0) { // Cuadrado
+        ctx.rect(100, 100, 200, 200);
+    } else if(papel.dobleces === 1) { // Triángulo
+        ctx.moveTo(100, 100); ctx.lineTo(300, 100); ctx.lineTo(100, 300);
+    } else if(papel.dobleces === 2) { // Avión
+        ctx.moveTo(200, 50); ctx.lineTo(300, 300); ctx.lineTo(200, 250); ctx.lineTo(100, 300);
+    } else if(papel.dobleces === 3) { // Zorro
+        ctx.moveTo(100, 200); ctx.lineTo(200, 100); ctx.lineTo(300, 200); ctx.lineTo(250, 300); ctx.lineTo(150, 300);
+    } else if(papel.dobleces === 4) { // Barco
+        ctx.moveTo(50, 250); ctx.lineTo(350, 250); ctx.lineTo(300, 300); ctx.lineTo(100, 300); ctx.closePath();
+        ctx.moveTo(200, 250); ctx.lineTo(200, 100); ctx.lineTo(300, 250);
+    } else { // Grulla
+        ctx.moveTo(200, 50); ctx.lineTo(300, 200); ctx.lineTo(200, 350); ctx.lineTo(100, 200); ctx.closePath();
+        ctx.moveTo(100, 200); ctx.lineTo(50, 150); ctx.moveTo(300, 200); ctx.lineTo(350, 150);
+    }
+    ctx.fill();
+    ctx.stroke();
 }
 
 dibujar();

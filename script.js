@@ -1,37 +1,30 @@
+// Referencias globales
 const canvas = document.getElementById('origamiCanvas');
 const ctx = canvas.getContext('2d');
+const editor = document.getElementById('codeEditor');
+const consola = document.getElementById('console-output');
 
 let nivelActual = 0;
-let estadoPapel = { w: 300, h: 300, color: 'white', pliegues: 0 };
+let estadoPapel = { w: 300, h: 300, color: 'white' };
 
 const niveles = [
-    {
-        instrucciones: "NIVEL 1: Define el color. Escribe: <code>pintar('purple')</code>",
-        validar: () => estadoPapel.color === 'purple'
-    },
-    {
-        instrucciones: "NIVEL 2: Ahora dobla el papel. Escribe: <code>plegar('mitad')</code>",
-        validar: () => estadoPapel.w < 300
-    },
-    {
-        instrucciones: "NIVEL 3: Usa un bucle for para plegar 3 veces:<br><code>for(let i=0; i<3; i++){ plegar('mitad'); }</code>",
-        validar: () => estadoPapel.w < 50
-    }
+    { inst: "Escribe: <code>pintar('purple')</code>", val: () => estadoPapel.color === 'purple' },
+    { inst: "Escribe: <code>plegar('mitad')</code>", val: () => estadoPapel.w < 300 },
+    { inst: "Usa un bucle: <br><code>for(let i=0; i<3; i++){ plegar('mitad'); }</code>", val: () => estadoPapel.w < 50 }
 ];
 
-// Funciones globales para que eval() las encuentre
-window.pintar = function(color) {
-    estadoPapel.color = color;
-    return "Color cambiado a " + color;
-}
+// FUNCIONES QUE LLAMA EL USUARIO
+window.pintar = function(c) {
+    estadoPapel.color = c;
+    return "Pintado de " + c;
+};
 
-window.plegar = function(tipo) {
-    if(tipo === 'mitad') {
+window.plegar = function(t) {
+    if(t === 'mitad') {
         estadoPapel.w /= 2;
-        estadoPapel.pliegues++;
-        return "Papel plegado";
+        return "Plegado realizado";
     }
-}
+};
 
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -42,36 +35,33 @@ function dibujar() {
     ctx.strokeRect(x, y, estadoPapel.w, estadoPapel.h);
 }
 
-function correrCodigo() {
-    const codigoInput = document.getElementById('codeEditor').value;
-    const consola = document.getElementById('console-output');
+// ESTA ES LA FUNCIÓN QUE ACTIVA EL BOTÓN
+window.correrCodigo = function() {
+    const texto = editor.value; // Leemos lo que escribiste
     
     try {
-        // Ejecutamos lo que está en el textarea
-        const res = eval(codigoInput);
-        consola.style.borderLeftColor = "#00ff41";
-        consola.innerText = "Resultado: " + res;
+        const resultado = eval(texto); // Ejecutamos el código
+        consola.innerText = "Resultado: " + resultado;
         dibujar();
         
-        // Verificar si pasó de nivel
-        if(niveles[nivelActual].validar()) {
+        // Revisar si pasas de nivel
+        if(niveles[nivelActual].val()) {
             consola.innerText += " | ¡Nivel Superado!";
             nivelActual++;
-            setTimeout(actualizarNivel, 1000);
+            setTimeout(actualizarInterfaz, 1000);
         }
-    } catch(e) {
-        consola.style.borderLeftColor = "#ff4141";
-        consola.innerText = "Error: " + e.message;
+    } catch(err) {
+        consola.innerText = "Error: " + err.message;
     }
-}
+};
 
-function actualizarNivel() {
+function actualizarInterfaz() {
     if(nivelActual < niveles.length) {
         document.getElementById('level-num').innerText = "NIVEL " + (nivelActual + 1);
-        document.getElementById('level-instructions').innerHTML = niveles[nivelActual].instrucciones;
-        document.getElementById('codeEditor').value = "";
+        document.getElementById('level-instructions').innerHTML = niveles[nivelActual].inst;
+        editor.value = "";
     } else {
-        alert("¡Has completado todos los niveles!");
+        document.getElementById('level-instructions').innerText = "¡ERES UN CRACK DEL CÓDIGO!";
     }
 }
 

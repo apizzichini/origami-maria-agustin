@@ -6,80 +6,72 @@ let estadoPapel = { w: 300, h: 300, color: 'white', pliegues: 0 };
 
 const niveles = [
     {
-        instrucciones: "NIVEL 1: Variables. Define el color del papel escribiendo: <code>pintar('purple')</code>",
+        instrucciones: "NIVEL 1: Define el color. Escribe: <code>pintar('purple')</code>",
         validar: () => estadoPapel.color === 'purple'
     },
     {
-        instrucciones: "NIVEL 2: Funciones. Ahora dobla el papel. Usa <code>plegar('mitad')</code>",
+        instrucciones: "NIVEL 2: Ahora dobla el papel. Escribe: <code>plegar('mitad')</code>",
         validar: () => estadoPapel.w < 300
     },
     {
-        instrucciones: "NIVEL 3: Bucles (Loops). Vamos a hacer varios pliegues. Escribe un ciclo for: <br><code>for(let i=0; i<3; i++) { plegar('mitad'); }</code>",
+        instrucciones: "NIVEL 3: Usa un bucle for para plegar 3 veces:<br><code>for(let i=0; i<3; i++){ plegar('mitad'); }</code>",
         validar: () => estadoPapel.w < 50
     }
 ];
 
-// Comandos que el usuario puede usar
-function pintar(color) {
+// Funciones globales para que eval() las encuentre
+window.pintar = function(color) {
     estadoPapel.color = color;
-    return `Estado: Color cambiado a ${color}`;
+    return "Color cambiado a " + color;
 }
 
-function plegar(tipo) {
+window.plegar = function(tipo) {
     if(tipo === 'mitad') {
         estadoPapel.w /= 2;
-        estadoPapel.h /= 1.2;
         estadoPapel.pliegues++;
-        return "Estado: Papel plegado";
+        return "Papel plegado";
     }
 }
 
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = estadoPapel.color;
-    ctx.strokeStyle = "#333";
-    
     const x = (canvas.width - estadoPapel.w) / 2;
     const y = (canvas.height - estadoPapel.h) / 2;
-    
     ctx.fillRect(x, y, estadoPapel.w, estadoPapel.h);
     ctx.strokeRect(x, y, estadoPapel.w, estadoPapel.h);
-    
-    // Dibujar líneas de pliegue basadas en la cantidad de veces que se llamó a la función
-    for(let i = 0; i < estadoPapel.pliegues; i++) {
-        ctx.beginPath();
-        ctx.moveTo(x + (i * 10), y);
-        ctx.lineTo(x + estadoPapel.w - (i * 10), y + estadoPapel.h);
-        ctx.stroke();
-    }
 }
 
 function correrCodigo() {
-    // Obtenemos lo que el usuario escribió (esto simularía un prompt de programación)
-    const codigoInput = prompt("Introduce tu código JavaScript:");
+    const codigoInput = document.getElementById('codeEditor').value;
     const consola = document.getElementById('console-output');
     
     try {
+        // Ejecutamos lo que está en el textarea
         const res = eval(codigoInput);
-        consola.innerText = "Consola: " + res;
+        consola.style.borderLeftColor = "#00ff41";
+        consola.innerText = "Resultado: " + res;
         dibujar();
         
+        // Verificar si pasó de nivel
         if(niveles[nivelActual].validar()) {
-            consola.innerText += "\n¡SISTEMA: Nivel completado! Cargando siguiente...";
+            consola.innerText += " | ¡Nivel Superado!";
             nivelActual++;
-            actualizarNivel();
+            setTimeout(actualizarNivel, 1000);
         }
     } catch(e) {
-        consola.innerText = "ERROR DE SINTAXIS: " + e.message;
+        consola.style.borderLeftColor = "#ff4141";
+        consola.innerText = "Error: " + e.message;
     }
 }
 
 function actualizarNivel() {
     if(nivelActual < niveles.length) {
-        document.getElementById('level-num').innerText = `NIVEL ${nivelActual + 1}`;
+        document.getElementById('level-num').innerText = "NIVEL " + (nivelActual + 1);
         document.getElementById('level-instructions').innerHTML = niveles[nivelActual].instrucciones;
+        document.getElementById('codeEditor').value = "";
     } else {
-        document.getElementById('level-instructions').innerText = "¡FELICIDADES! Eres un Master del Code-Gami.";
+        alert("¡Has completado todos los niveles!");
     }
 }
 

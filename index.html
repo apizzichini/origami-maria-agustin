@@ -2,36 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Master Origami Code: 10 Niveles</title>
+    <title>Origami Code: 10 Niveles</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
         <div id="sidebar">
-            <div class="header">
-                <h1 id="lvl-tag">NIVEL 1</h1>
-                <p id="mision">Misión: Dale color al papel.</p>
-            </div>
+            <h1 id="lvl-tag">NIVEL 1</h1>
+            <p id="mision">Misión: color('azul')</p>
             
-            <textarea id="editor" spellcheck="false" placeholder="// Escribe tu código aquí..."></textarea>
+            <textarea id="editor" spellcheck="false" placeholder="// Escribe aquí..."></textarea>
             
             <div class="button-group">
-                <button id="btn-run" class="btn-main">¡EJECUTAR!</button>
-                <button id="btn-reset" class="btn-secondary">RESETEAR</button>
+                <button class="btn-main" onclick="correrCodigo()">EJECUTAR</button>
+                <button class="btn-secondary" onclick="resetearJuego()">RESETEAR</button>
             </div>
 
-            <div id="consola">Listo para empezar...</div>
-            
+            <div id="consola">Consola: Lista</div>
             <div id="explicacion-box">
-                <strong style="color: #ffcc00;">💡 Lección de Programación:</strong>
-                <p id="profe-txt">¡Bienvenido! Vamos a aprender lógica doblando papel.</p>
+                <strong>💡 Clase de hoy:</strong>
+                <p id="profe-txt">Escribe tu primer comando para empezar.</p>
             </div>
         </div>
 
         <div id="canvas-area">
             <h2 id="figura-nombre">PAPEL CUADRADO</h2>
             <canvas id="lienzo" width="400" height="400"></canvas>
-            <div id="stats">Dobleces: <span id="stat-dobleces">0</span> | Color: <span id="stat-color">blanco</span></div>
+            <div id="stats">Dobleces: <span id="stat-dobleces">0</span></div>
         </div>
     </div>
     <script src="script.js"></script>

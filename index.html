@@ -2,25 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Code-Gami: Aprende Programando</title>
+    <title>Origami Kids: Aprende a Programar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
         <div id="sidebar">
-            <div class="level-header">
-                <span id="level-num">NIVEL 1</span>
-                <h2 id="level-title">Variables de Color</h2>
+            <div class="header">
+                <h1 id="lvl-tag">NIVEL 1</h1>
+                <p id="mision">Misión: Dale color al papel.</p>
             </div>
-            <p id="level-instructions">Escribe: <code>pintar("purple")</code></p>
             
-            <textarea id="codeEditor" placeholder="// Escribe aquí tu código..."></textarea>
+            <div id="guia">
+                <strong>Comandos:</strong>
+                <ul>
+                    <li><code>color("rojo")</code></li>
+                    <li><code>doblar()</code></li>
+                    <li><code>borrar()</code></li>
+                </ul>
+            </div>
+
+            <textarea id="editor" placeholder="Escribe aquí..."></textarea>
             
-            <div id="console-output">Esperando código...</div>
-            <button id="run-btn" onclick="correrCodigo()">EJECUTAR CÓDIGO</button>
+            <button id="btn" onclick="ejecutar()">¡EJECUTAR!</button>
+            <div id="consola">Listo para programar...</div>
         </div>
+
         <div id="canvas-area">
-            <canvas id="origamiCanvas" width="400" height="400"></canvas>
+            <canvas id="lienzo" width="400" height="400"></canvas>
+            <h2 id="figura-nombre">PAPEL CUADRADO</h2>
         </div>
     </div>
     <script src="script.js"></script>

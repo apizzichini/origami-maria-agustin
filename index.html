@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Origami Kids: Aprende a Programar</title>
+    <title>Master Origami Code: 10 Niveles</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,24 +13,25 @@
                 <p id="mision">Misión: Dale color al papel.</p>
             </div>
             
-            <div id="guia">
-                <strong>Comandos:</strong>
-                <ul>
-                    <li><code>color("rojo")</code></li>
-                    <li><code>doblar()</code></li>
-                    <li><code>borrar()</code></li>
-                </ul>
+            <textarea id="editor" spellcheck="false" placeholder="// Escribe tu código aquí..."></textarea>
+            
+            <div class="button-group">
+                <button id="btn-run" class="btn-main">¡EJECUTAR!</button>
+                <button id="btn-reset" class="btn-secondary">RESETEAR</button>
             </div>
 
-            <textarea id="editor" placeholder="Escribe aquí..."></textarea>
+            <div id="consola">Listo para empezar...</div>
             
-            <button id="btn" onclick="ejecutar()">¡EJECUTAR!</button>
-            <div id="consola">Listo para programar...</div>
+            <div id="explicacion-box">
+                <strong style="color: #ffcc00;">💡 Lección de Programación:</strong>
+                <p id="profe-txt">¡Bienvenido! Vamos a aprender lógica doblando papel.</p>
+            </div>
         </div>
 
         <div id="canvas-area">
-            <canvas id="lienzo" width="400" height="400"></canvas>
             <h2 id="figura-nombre">PAPEL CUADRADO</h2>
+            <canvas id="lienzo" width="400" height="400"></canvas>
+            <div id="stats">Dobleces: <span id="stat-dobleces">0</span> | Color: <span id="stat-color">blanco</span></div>
         </div>
     </div>
     <script src="script.js"></script>
